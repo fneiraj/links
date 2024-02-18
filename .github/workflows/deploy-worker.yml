@@ -9,6 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy
     steps:
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+        #  cache: ${{ steps.detect-package-manager.outputs.manager }}
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+            version: 8.15.1
       - uses: actions/checkout@v4
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
