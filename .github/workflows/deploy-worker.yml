@@ -6,7 +6,7 @@ on:
       - main
 jobs:
   deploy:
-    runs-on: [self-hosted]
+    runs-on: ubuntu
     name: Deploy
     steps:
       - uses: actions/checkout@v4
