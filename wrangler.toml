@@ -6,8 +6,8 @@ kv_namespaces = [
   { binding = "LINKS_KV", id = "8e53019f0d5b472089662a57e9f8f2cf", preview_id = "30b290ec4fbe4019b03cbb7d4b2fb597" }
 ]
 
-[env.staging.vars]
+[env.develop]
 HOST_URL = "http://localhost:8787"
 
-[env.production.vars]
+[env.production]
 HOST_URL = "https://links.fneira.dev"
