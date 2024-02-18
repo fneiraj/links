@@ -4,16 +4,23 @@ import { responseJson } from "../utils/utils";
 import { checkIfslugExists, saveLinkToKV } from "../utils/kv-utils";
 
 export default async function createLink(request: IRequestStrict, env: Env) {
-  const {url: longLink, slug, password} = await request.json() as NewLinkRequest;
+  const { url: longLink, slug, password } = await request.json() as NewLinkRequest;
 
-  if (!!slug && await checkIfslugExists(slug, env)) {
-    return responseJson({ error: `Slug ${slug} already exists` }, 400);
+  if (!!slug && !/^[a-zA-Z0-9-_]{1,20}$/.test(slug)) {
+    return responseJson({ error: "Slug must be alphanumeric and have a maximum of 20 characters" }, 400);
   }
 
-  if (!!slug) {
+  const slugLower = slug?.toLowerCase();
+
+
+  if (!!slugLower && await checkIfslugExists(slugLower, env)) {
+    return responseJson({ error: `Slug ${slugLower} already exists` }, 400);
+  }
+
+  if (!!slugLower) {
     //@ts-ignore
-    await saveLinkToKV(env, slug, longLink, password);
-    return responseJson({ short: `${env.HOST_URL}/${slug}`, large: longLink }, 201);
+    await saveLinkToKV(env, slugLower, longLink, password);
+    return responseJson({ short: `${env.HOST_URL}/${slugLower}`, large: longLink }, 201);
   }
 
   let slugGenerated = btoa(Math.random() + "").slice(0, 9);

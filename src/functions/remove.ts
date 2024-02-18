@@ -21,6 +21,10 @@ export default async function removeLink(request: IRequestStrict, env: Env) {
   //@ts-ignore
   const link = JSON.parse(await getLinkFromKV(env, slug));
 
+  if (!link.password) {
+    return responseJson({ error: "This link does not have a password" }, 400);
+  }
+
   if (link.password !== password) {
     return responseJson({ error: "Password is incorrect" }, 401);
   }

@@ -78,7 +78,7 @@
         <div class="mt-2 mb-4 text-sm">
           Remember that if you added a password to the link you can delete it whenever you want.
         </div>
-        <div class="flex gap-4">
+        <div id="result_details" class="flex gap-4">
           <span>$short_link$</span>
           <span>&rarr;</span>
           <span>$long_link$</span>
@@ -94,7 +94,7 @@
           <span class="sr-only">error</span>
           <h3 class="text-lg font-medium">Error creating link</h3>
         </div>
-        <div class="flex gap-4 mt-4">
+        <div id="error_details" class="flex gap-4 mt-4">
           <span>$error_message$</span>
         </div>
       </div>
@@ -108,7 +108,22 @@
   const $createBtn = document.getElementById('create-btn');
   const $buttonSpan = $createBtn.querySelector('span');
   const $resultSuccess = document.getElementById('success');
+  const $resultDetails = document.getElementById('result_details');
   const $resultError = document.getElementById('error');
+  const $errorDetails = document.getElementById('error_details');
+
+  const resetState = () => {
+    $resultSuccess.classList.add('hidden');
+    $resultError.classList.add('hidden');
+    $resultDetails.innerHTML = `
+      <span>$short_link$</span>
+      <span>&rarr;</span>
+      <span>$long_link$</span>
+    `;
+    $errorDetails.innerHTML = `
+      <span>$error_message$</span>
+    `;
+  }
 
   const changeStateToCreating = () => {
     $loader.classList.remove('hidden');
@@ -129,7 +144,7 @@
   const changeStateToSuccess = (response) => {
     $resultError.classList.add('hidden');
 
-    $resultSuccess.innerHTML = $resultSuccess.innerHTML
+    $resultDetails.innerHTML = $resultDetails.innerHTML
       .replace('$short_link$', `<a href="${response.short}" target="_blank">${response.short}</a>`)
       .replace('$long_link$', response.large);
 
@@ -139,7 +154,7 @@
   const changeStateToError = (error) => {
     $resultSuccess.classList.add('hidden');
 
-    $resultError.innerHTML = $resultError.innerHTML
+    $errorDetails.innerHTML = $errorDetails.innerHTML
       .replace('$error_message$', error.error || error.message || 'An error occurred');
 
     $resultError.classList.remove('hidden');
@@ -148,8 +163,11 @@
   $form.addEventListener('submit', async event => {
     event.preventDefault();
     changeStateToCreating();
+    resetState();
 
     const data = new FormData($form);
+
+    console.log(data.get('url'), data.get('slug'), data.get('password'));
 
     try {
       const res = await fetch(

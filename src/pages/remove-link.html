@@ -68,7 +68,7 @@
           <span class="sr-only">Info</span>
           <h3 class="text-lg font-medium">Link removed successfully</h3>
         </div>
-        <div class="mt-2 mb-4 text-sm">
+        <div id="success_details" class="mt-2 mb-4 text-sm">
           Remember that now that you deleted the link <strong>$short_link$</strong> anyone can register it.
         </div>
       </div>
@@ -82,7 +82,7 @@
           <span class="sr-only">error</span>
           <h3 class="text-lg font-medium">Error removing link</h3>
         </div>
-        <div class="flex gap-4 mt-4">
+        <div id="error_details" class="flex gap-4 mt-4">
           <span>$error_message$</span>
         </div>
       </div>
@@ -96,7 +96,20 @@
   const $removeBtn = document.getElementById('remove-btn');
   const $buttonSpan = $removeBtn.querySelector('span');
   const $resultSuccess = document.getElementById('success');
+  const $resultDetails = document.getElementById('success_details');
   const $resultError = document.getElementById('error');
+  const $errorDetails = document.getElementById('error_details');
+
+  const resetState = () => {
+    $resultSuccess.classList.add('hidden');
+    $resultError.classList.add('hidden');
+    $resultDetails.innerHTML = `
+      Remember that now that you deleted the link <strong>$short_link$</strong> anyone can register it.
+    `;
+    $errorDetails.innerHTML = `
+      <span>$error_message$</span>
+    `;
+  }
 
   const changeStateToRemoving = () => {
     $loader.classList.remove('hidden');
@@ -117,7 +130,7 @@
   const changeStateToSuccess = (response) => {
     $resultError.classList.add('hidden');
 
-    $resultSuccess.innerHTML = $resultSuccess.innerHTML
+    $resultDetails.innerHTML = $resultDetails.innerHTML
       .replace('$short_link$', response.short)
 
     $resultSuccess.classList.remove('hidden');
@@ -127,7 +140,7 @@
     console.log(error)
     $resultSuccess.classList.add('hidden');
 
-    $resultError.innerHTML = $resultError.innerHTML
+    $errorDetails.innerHTML = $errorDetails.innerHTML
       .replace('$error_message$', error.error || error.message || 'An error occurred');
 
     $resultError.classList.remove('hidden');
@@ -135,6 +148,8 @@
 
   $form.addEventListener('submit', async event => {
     event.preventDefault();
+
+    resetState();
 
     const data = new FormData($form);
 
