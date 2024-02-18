@@ -32,6 +32,10 @@ export function responseRedirect(link: Link, status: number = 302) {
   return Response.redirect(link.longLink, status);
 }
 
+export function generateSlug() {
+  return btoa(Math.random() + "").slice(0, 9).toLocaleLowerCase();
+}
+
 export default {
   responseJson,
   responseHtml,

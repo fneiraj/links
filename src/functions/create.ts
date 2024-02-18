@@ -1,6 +1,6 @@
 import { IRequestStrict } from "itty-router";
 import type { Env, NewLinkRequest } from "../types";
-import { responseJson } from "../utils/utils";
+import { generateSlug, responseJson } from "../utils/utils";
 import { checkIfslugExists, saveLinkToKV } from "../utils/kv-utils";
 
 export default async function createLink(request: IRequestStrict, env: Env) {
@@ -23,10 +23,10 @@ export default async function createLink(request: IRequestStrict, env: Env) {
     return responseJson({ short: `${env.HOST_URL}/${slugLower}`, large: longLink }, 201);
   }
 
-  let slugGenerated = btoa(Math.random() + "").slice(0, 9);
+  let slugGenerated = generateSlug();
 
   while (await checkIfslugExists(slugGenerated, env)) {
-    slugGenerated = btoa(Math.random() + "").slice(0, 9);
+    slugGenerated = generateSlug();
   }
 
   await saveLinkToKV(env, slugGenerated, longLink, password);
