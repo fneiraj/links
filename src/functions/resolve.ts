@@ -6,7 +6,7 @@ import type { Env } from "../types";
 
 export default async function resolveLink(request: IRequestStrict, env: Env) {
   const slug = request.params.slug;
-  const redirectTo = await getLinkFromKV(env, slug);
+  const redirectTo = await getLinkFromKV(env, slug.toLowerCase());
 
   if (redirectTo) {
     return responseRedirect(JSON.parse(redirectTo));
