@@ -1,7 +1,7 @@
 import { IRequestStrict, Router } from "itty-router";
 import HomePage from "./pages/home.html";
 import RemoveLinkPage from "./pages/remove-link.html";
-import StylesCSS from "./pages/styles.css";
+import StylesCSS from "./pages/styles.html";
 import createLink from "./functions/create";
 import resolveLink from "./functions/resolve";
 import removeLink from "./functions/remove";

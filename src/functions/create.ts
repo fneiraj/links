@@ -7,7 +7,7 @@ export default async function createLink(request: IRequestStrict, env: Env) {
   const {url: longLink, slug, password} = await request.json() as NewLinkRequest;
 
   if (!!slug && await checkIfslugExists(slug, env)) {
-    return responseJson({ error: "slug already exists" }, 400);
+    return responseJson({ error: `Slug ${slug} already exists` }, 400);
   }
 
   if (!!slug) {
