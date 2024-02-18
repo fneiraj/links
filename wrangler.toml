@@ -1,7 +1,6 @@
 name = "links"
 main = "src/index.ts"
 compatibility_date = "2024-02-08"
-vars = { ENVIRONMENT = "develop" }
 HOST_URL = "http://localhost:8787"
 
 kv_namespaces = [
@@ -9,5 +8,4 @@ kv_namespaces = [
 ]
 
 [env.production]
-vars = { ENVIRONMENT = "production" }
 HOST_URL = "https://links.fneira.dev"
