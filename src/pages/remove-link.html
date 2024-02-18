@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shorten URL - fneira.dev</title>
+</head>
+
+<body>
+  <main>
+    <h1>Link shortener</h1>
+    <h2>Remove Link</h2>
+    <form id="form-remove">
+      <div>
+        <input full-width required id='slug' name="slug" placeholder='Slug to remove'>
+        <input id='password' name="password" required placeholder='Password' type='password' />
+      </div>
+      <button full-width>Remove</button>
+    </form>
+    <div id="result"></div>
+  </main>
+  <script>
+  </script>
+</body>
+
+<script>
+  const $form = document.getElementById('form-remove');
+  const $result = document.getElementById('result');
+
+  $form.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    const data = new FormData($form);
+
+    try {
+      const res = await fetch(
+        '/',
+        {
+          method: 'DELETE',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            slug: data.get('slug'),
+            password: data.get('password'),
+          }),
+        },
+      );
+
+      if (!res.ok) {
+        $result.innerHTML = `
+          <h3>Error</h3>
+          <span>${res.statusText}</span>
+        `;
+        return
+      }
+
+      const resData = await res.json();
+
+
+      $result.innerHTML = `
+        <h3>Shortened link ${resData.short} removed</h3>
+        <span><${resData.short} -> ${resData.large}</span>
+      `;
+    } catch (err) {
+      $result.innerHTML = `
+        <h3>Error</h3>
+        <span>${err.message}</span>
+      `;
+    }
+  });
+</script>
+
+</html>

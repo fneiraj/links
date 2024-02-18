@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css">
+  <title>Shorten URL - fneira.dev</title>
+</head>
+
+<body>
+  <main>
+    <div>
+      <a href="/remove">Remove link</a>
+    </div>
+    <h1>Link shortener</h1>
+    <h2>Create a short url</h2>
+    <form id="form-link">
+      <input full-width required id='url' name="url" type="url" placeholder='Link'>
+      <div>
+        <input id='slug' name="slug" placeholder='Slug to use for the link'>
+        <input id='password' name="password" required placeholder='Password to remove link' type='password' />
+      </div>
+      <button full-width>Create</button>
+    </form>
+    <div id="result"></div>
+  </main>
+  <script>
+  </script>
+</body>
+
+<script>
+  const $form = document.getElementById('form-link');
+
+  $form.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    const data = new FormData($form);
+
+    try {
+      const res = await fetch(
+        '/',
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            url: data.get('url'),
+            slug: data.get('slug'),
+            password: data.get('password'),
+          }),
+        },
+      );
+
+      const resData = await res.json();
+
+      const $result = document.getElementById('result');
+
+      $result.innerHTML = `
+        <h3>Shortened link</h3>
+        <span><a href="${resData.short}" target="_blank">${resData.short}</a> -> ${resData.large}</span>
+      `;
+    } catch (err) {
+      const $result = document.getElementById('result');
+
+      $result.innerHTML = `
+        <h3>Error</h3>
+        <span>${err.message}</span>
+      `;
+    }
+  });
+</script>
+
+</html>
