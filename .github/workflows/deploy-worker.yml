@@ -23,4 +23,4 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: deploy --project-name=links
+          command: pages deploy --project-name=links
